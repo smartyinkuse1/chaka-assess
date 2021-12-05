@@ -1,0 +1,21 @@
+<div class="
+flex
+flex-col
+bg-white
+justify-evenly
+items-start
+px-4
+sm:px-2
+w-24
+sm:w-36
+shadow-md
+h-28">
+  <div class="mt-2">
+    <p class="text-sm sm:text-lg text-tab ">{{cardObj.title}}</p>
+    <p class="font-semibold text-card text-xs">{{cardObj.value | currency}}</p>
+    <span class="flex justify-between text-xs sm:text-sm">
+      <p>{{cardObj.symbol}}</p>
+      <p class="flex"><mat-icon>arrow_upward</mat-icon> 10%</p>
+    </span>
+  </div>
+</div>

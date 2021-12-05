@@ -1,0 +1,15 @@
+<div class="container py-5 px-8 sm:px-20">
+  <div *ngFor="let news of news$ | async" class="w-full sm:grid sm:grid-cols-5 my-5">
+    <div class="sm:col-span-1">
+      <img [src]="news.image" [alt]="news.source">
+    </div>
+    <div class="sm:col-span-4 pl-3 mt-3 sm:mt-0">
+      <p class="font-bold text-lg">{{news.headline}}</p>
+      <p class="mt-1 text-custom text-xs">{{news.summary}}</p>
+      <p class="text-custom text-xs mt-1 font-light">{{news.datetime | timeago}}</p>
+    </div>
+  </div>
+
+</div>
+
+<app-loader></app-loader>

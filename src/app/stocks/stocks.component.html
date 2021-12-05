@@ -1,0 +1,145 @@
+<div *ngIf="!(isLoading$ | async)" class="p-4">
+  <div class="sm:grid grid-cols-7 gap-2 mb-2 sm:pl-10">
+    <div class="col-span-1 text-center sm:text-left">
+      <p class="text-light">AAPL</p>
+      <p>Apple Inc</p>
+    </div>
+    <div class="col-start-6 my-2">
+      <span class="flex justify-center bg-secondary px-3 rounded-xl">
+        <mat-icon>done</mat-icon>
+        <p class="pl-1">Following</p>
+      </span>
+    </div>
+    <div class="col-start-7 my-2">
+      <span class="flex justify-center px-3 shadow rounded-xl">
+        <mat-icon>share</mat-icon>
+        <p class="pl-1">Share</p>
+      </span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+  <div class="grid grid-cols-3 gap-4 mt-3">
+    <div class="col-span-3 sm:col-span-2 main">
+      <span class="text-xs sm:text-sm sm:w-1/2 flex justify-between my-2">
+        <p class="text-2xl font-bold p-1">{{ (quoteData$ | async)?.c | currency}}</p>
+        <p class="flex rounded-md p-1" [ngClass]="{'bg-red-100 text-red-500': !checkPositive((quoteData$ | async)?.dp) }">
+          <mat-icon [ngClass]="{'red': !checkPositive((quoteData$ | async)?.dp)}">
+            {{
+              checkPositive((quoteData$ | async)?.dp)
+                ? "arrow_upward"
+                : "arrow_downward"
+            }}</mat-icon
+          >{{ (quoteData$ | async)?.dp }}%
+        </p>
+        <p class="p-1" [ngClass]="{'text-red-700': !checkPositive((quoteData$ | async)?.d)}">{{ (quoteData$ | async)?.d }} Today</p>
+      </span>
+      <span class="text-xs sm:text-sm sm:w-1/2 flex justify-between my-2">
+        <p class="text-light">Pre-market:</p>
+        <p class="font-bold">
+          $394.78 (<mat-icon>arrow_downward</mat-icon> 0.92%)
+        </p>
+        <p>+3.58</p>
+      </span>
+      <span class="sm:w-2/3 flex justify-between text-light my-2">
+        <p>Closed:</p>
+        <p>{{((quoteData$ | async)?.t) | date}}</p>
+        <p>USD . AAPL . DISCLAIMER</p>
+      </span>
+      <span class="sm:w-1/2 flex justify-between filter">
+        <p *ngFor="let filter of filterValues" (click)="onSelectFilter(filter)" [ngClass]="{'text-custom':filter === selectedFilter }">
+          {{ filter }} <mat-divider *ngIf="filter === selectedFilter"></mat-divider>
+        </p>
+      </span>
+      <div class="chart">
+        <div *ngIf="!canvasLoading" echarts [options]="chartOption" class="canva"></div>
+        <mat-spinner *ngIf="canvasLoading" diameter="20"></mat-spinner>
+      </div>
+      <div class="w-full">
+        <owl-carousel-o [options]="customOptions" >
+          <ng-template carouselSlide >
+            <app-card [cardObj]="{title: 'SPDR S&P', value: 200, symbol:'SPY'}" ></app-card>
+          </ng-template>
+          <ng-template carouselSlide >
+            <app-card [cardObj]="{title: 'ProShares', value: 150, symbol:'TQQQ'}" ></app-card>
+          </ng-template>
+          <ng-template carouselSlide >
+            <app-card [cardObj]="{title: 'Vanguard', value: 190, symbol:'VOO'}"></app-card>
+          </ng-template>
+          <ng-template carouselSlide >
+            <app-card [cardObj]="{title: 'Invesco QQQ', value: 220, symbol:'QQQ'}"></app-card>
+          </ng-template>
+        </owl-carousel-o>
+      </div>
+    </div>
+    <div class="col-span-3 sm:col-span-1">
+      <div class="details">
+        <div class="tags">
+          <span>Most active</span>
+          <span>Stock</span>
+          <span>US listed security</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-between">
+          <p class="text-light">Previous Close</p>
+          <p>{{(quoteData$ | async)?.pc |currency}}</p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-between">
+          <p class="text-light">Day Range</p>
+          <p>{{(quoteData$ | async)?.l |currency}} - {{(quoteData$ | async)?.h |currency}}</p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-between">
+          <p class="text-light">Year Range</p>
+          <p>$294.78 - $408.71</p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-between">
+          <p class="text-light">Market Cap</p>
+          <p>152.78B USD</p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-between">
+          <p class="text-light">Volume</p>
+          <p>39.48M</p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-between">
+          <p class="text-light">P/E Ratio</p>
+          <p>-</p>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-between">
+          <p class="text-light">Dividend Yield</p>
+          <p>-</p>
+        </div>
+      </div>
+      <div class="about mt-4">
+        <mat-accordion>
+          <mat-expansion-panel
+            (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title class="block text-xs text-expand">
+                <div class="flex justify-between">
+                  <p class="mt-1 text-tab text-base font-medium">About</p>
+                  <div class="">
+                    <mat-icon>{{
+                      panelOpenState ? "expand_less" : "expand_more"
+                    }}</mat-icon>
+                  </div>
+                </div>
+                <mat-divider *ngIf="panelOpenState"></mat-divider>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>Here is some more info</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+</div>
+<app-loader></app-loader>

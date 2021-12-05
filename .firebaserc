@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "chaka-olayinka-asses": {
+      "hosting": {
+        "chaka-assessment": [
+          "chaka-olayinka-asses"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "chaka-olayinka-asses"
+  }
+}
